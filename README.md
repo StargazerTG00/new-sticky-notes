@@ -12,6 +12,13 @@ A lightweight sticky notes app built with Next.js and React, with no external UI
 
 ---
 
+## How to run?
+
+- Execute `npm run dev` to start the development server.
+- Open `http://localhost:3000` in your browser.
+
+---
+
 ## Architecture
 
 The app is split into three layers:

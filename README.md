@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sticky Notes App — Technical Documentation
 
-## Getting Started
+A lightweight sticky notes app built with Next.js and React, with no external UI libraries. Notes are created, moved, resized, recolored, and deleted, and the information is persisted in localstorage.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js** — Typescript development.
+- **ReactJS** — No external component libraries used.
+- **Pure CSS** — Native CSS used for styling.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture
 
-## Learn More
+The app is split into three layers:
 
-To learn more about Next.js, take a look at the following resources:
+### Types
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`app/types/index.ts` defines the `NoteModel` shape — id, position (x, y), size (width, height), color, text content, and z-index.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Hooks
 
-## Deploy on Vercel
+`app/hooks/` contains the core logic:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **`useNotes`**:  Manages the notes array and syncs it to localStorage (persisting and loading information).
+- **`useDrag`**:  Handles drag gestures by attaching `mousemove` and `mouseup` listeners directly on the document, reporting changes or variations from the initial mouse position.
+- **`useResize`**:  Same approach for resizing from the bottom-right corner handle only.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Components
+
+`app/components/` handles the UI:
+
+- **`Canvas`**:  Main container. Renders the toolbar, all notes, and the trash zone. Also adjust the note positions when the window is resized so nothing ends up off-screen.
+- **`Note`**:  Keeps its own local position state for smooth dragging, and only calls back to `Canvas` once the drag ends to persist the final position. It deletes the note if its over the trash zone.
+- **`Toolbar`**:  Contains the button to add a new note.
+- **`TrashZone`**:  Appears at the bottom of the screen during a drag and highlights when a note is dragged over it. Its hidden when theres no active dragging.
+
+---
+
+## Features
+
+- Add notes via the toolbar button or by double-clicking the canvas.
+- Move notes by dragging their header.
+- Resize notes from the bottom-right corner handle.
+- Change note color from the color buttons in the header.
+- Delete a note by dragging it onto the trash zone.
+- All note data (position, size, color, text) is persisted in `localStorage`.
+- Notes and resize handles are limited to the current window view. On window resize, `Canvas` adjust all note positions to fit the new dimensions and it will be limited at the borders of the screen if trying to move it outside the current view.

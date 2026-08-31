@@ -1,26 +1,184 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  box-sizing: border-box;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  margin: 0;
+  background: #f5f2eb;
+  color: #292929;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/*Canvas related*/
+
+.canvas {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #f5f2eb;
+}
+
+/*Toolbar related*/
+
+.toolbar {
+  position: relative;
+  z-index: 10;
+  height: 60px;
+  padding: 13px 20px;
+  background: white;
+  border-bottom: 1px solid #ddd8cf;
+}
+
+.toolbar__button {
+  border: 0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  background: #333;
+  color: white;
+  cursor: pointer;
+}
+
+.toolbar__button:hover {
+  background: #4b4b4b;
+}
+
+/*Note related*/
+
+.note {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(50, 45, 35, 0.16);
+  border-radius: 3px;
+  box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.14);
+}
+
+.note__header {
+  min-height: 32px;
+  padding: 8px;
+  border-bottom: 1px solid rgba(50, 45, 35, 0.12);
+  background: rgba(255, 255, 255, 0.25);
+  cursor: grab;
+  user-select: none;
+}
+
+.note__header:active {
+  cursor: grabbing;
+}
+
+.note__colors {
+  display: flex;
+  gap: 5px;
+}
+
+.note__color-swatch {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.note__color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.note__body {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  resize: none;
+  border: 0;
+  padding: 10px;
+  background: transparent;
+  color: inherit;
+  line-height: 1.4;
+  outline: 0;
+}
+
+.note__body::placeholder {
+  color: rgba(41, 41, 41, 0.5);
+}
+
+.note__resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  cursor: se-resize;
+}
+
+.note__resize-handle::after {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid rgba(41, 41, 41, 0.55);
+  border-bottom: 2px solid rgba(41, 41, 41, 0.55);
+  content: "";
+}
+
+/* Trash Zone related */
+
+.trash-zone {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%) translateY(10px);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px dashed #b9b3a8;
+  border-radius: 5px;
+  background: white;
+  color: #666;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.trash-zone--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.trash-zone--active {
+  border-color: #c53d3d;
+  background: #fff0f0;
+  color: #a32626;
+  transform: translateX(-50%) translateY(0) scale(1.04);
+}
+
+.trash-zone__icon {
+  font-size: 18px;
+}
+
+.trash-zone__label {
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .trash-zone {
+    bottom: 12px;
+  }
+
+  .trash-zone__label {
+    display: none;
+  }
 }
